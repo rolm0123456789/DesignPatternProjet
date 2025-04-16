@@ -15,4 +15,13 @@ public class GestionnaireInterventions
         _sujet.Notifier("Nouvelle intervention créée.");
         return intervention;
     }
+    public void AssignerTechnicien()
+    {
+
+    }
+
+    public void Sauvegarder()
+    {
+
+    }
 }
