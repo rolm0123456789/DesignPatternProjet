@@ -9,7 +9,6 @@ public class Intervention
     public DateTime DateDemande { get; set; }
     public DateTime DateRealisation { get; set; }
     public string Lieu { get; set; }
-    public TimeSpan Pointage { get; set; }
 }
 
 public interface IIntervention
