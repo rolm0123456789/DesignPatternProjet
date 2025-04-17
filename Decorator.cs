@@ -28,28 +28,28 @@ public class SuiviGPSDecorator : InterventionDecorator
 //    }
 //}
 
-public static class InterventionPiecesJointeExts
-{
-    private static ConditionalWeakTable<Intervention, PieceJointeData> _extensionData = new ConditionalWeakTable<Intervention, PieceJointeData>();
-    private class PieceJointeData
-    {
-        public string? cheminPieceJointe { get; set; }
-    }
+//public static class InterventionPiecesJointeExts
+//{
+//    private static ConditionalWeakTable<Intervention, PieceJointeData> _extensionData = new ConditionalWeakTable<Intervention, PieceJointeData>();
+//    private class PieceJointeData
+//    {
+//        public string? cheminPieceJointe { get; set; }
+//    }
 
-    private static PieceJointeData GetPieceJointeData(Intervention intervention)
-    {
-        return _extensionData.GetValue(intervention, _ => new PieceJointeData());
-    }
+//    private static PieceJointeData GetPieceJointeData(Intervention intervention)
+//    {
+//        return _extensionData.GetValue(intervention, _ => new PieceJointeData());
+//    }
 
-    public static void SetCheminPieceJointe(this Intervention intervention, string chemin)
-    {
-        GetPieceJointeData(intervention).cheminPieceJointe = chemin;
-    }
-    public static string? GetCheminPieceJointe(this Intervention intervention)
-    {
-        return GetPieceJointeData(intervention).cheminPieceJointe;
-    }
-}
+//    public static void SetCheminPieceJointe(this Intervention intervention, string chemin)
+//    {
+//        GetPieceJointeData(intervention).cheminPieceJointe = chemin;
+//    }
+//    public static string? GetCheminPieceJointe(this Intervention intervention)
+//    {
+//        return GetPieceJointeData(intervention).cheminPieceJointe;
+//    }
+//}
 
 public static class InterventionPiecesJointeExts
 {
@@ -66,10 +66,10 @@ public static class InterventionPiecesJointeExts
 
     extension(Intervention intervention)
     {
-        public string CheminPieceJointe
+        public string? CheminPieceJointe
         {
             get => GetPieceJointeData(intervention).cheminPieceJointe;
-            set => GetPieceJointeData(intervention).cheminPieceJointe = chemin;
+            set => GetPieceJointeData(intervention).cheminPieceJointe = value;
         }
     }
 }

@@ -7,7 +7,7 @@ public class Personne
     public Role? Role { get; set; }
 }
 
-enum Role
+public enum Role
 {
     Admin,
     Manager,
