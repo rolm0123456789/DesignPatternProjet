@@ -1,24 +1,75 @@
 namespace Projet;
 
-public interface IObservateur
+public interface IObserver
 {
-    void MettreAJour(string message);
+    void Update(ISubject interventionNotifieurSujet);
 }
 
-public class ConsoleLogger : IObservateur
+public interface ISubject
 {
-    public void MettreAJour(string message) => Console.WriteLine("LOG: " + message);
+    void Attach(IObserver observer);
+
+    void Detach(IObserver observer);
+
+    void Notify();
 }
 
-public class InterventionSujet
+
+public class ConsoleLogger : IObserver
 {
-    private List<IObservateur> _observateurs = new List<IObservateur>();
-    public void Attacher(IObservateur observateur) => _observateurs.Add(observateur);
-    public void Notifier(string message)
+    public void Update(ISubject subject)
     {
-        foreach (var observateur in _observateurs)
-            observateur.MettreAJour(message);
+        if (subject is InterventionNotifierSujet interventionNotifieurSujet)
+        {
+
+            Console.WriteLine("ConsoleLogger: Subject's state has changed to: " + interventionNotifieurSujet.Itervention);
+        }
+    }
+}
+
+public class EmailNotifiactionObserver : IObserver
+{
+    public List<string> Personnes = new List<string>();
+    public void Update(ISubject subject)
+    {
+        if (subject is InterventionNotifierSujet interventionNotifieurSujet)
+        {
+            if (interventionNotifieurSujet.Itervention != null && interventionNotifieurSujet.Itervention is UrgenceIntervention intervention)
+            {
+                Console.WriteLine("Envoie d'un email a : " + intervention.Demandeur + "Intervention" + intervention.Nom + " " + interventionNotifieurSujet.Message);
+            }
+        }
+    }
+}
+
+public class InterventionNotifierSujet : ISubject
+{
+    public Intervention? Itervention { get; set; }
+    public string? Message { get; set; }
+    private List<IObserver> _observers = new List<IObserver>();
+
+    public void Attach(IObserver observer)
+    {
+        _observers.Add(observer);
     }
 
-    public void Detacher(IObservateur observateur) => _observateurs.Remove(observateur);
+    public void Detach(IObserver observer)
+    {
+        _observers.Remove(observer);
+    }
+
+    public void Notify()
+    {
+        foreach (var observer in _observers)
+        {
+            observer.Update(this);
+        }
+    }
+
+    public void Notify(Intervention itv, string message)
+    {
+        Itervention = itv;
+        Message = message;
+        Notify();
+    }
 }

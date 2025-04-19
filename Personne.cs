@@ -2,14 +2,14 @@ namespace Projet;
 
 public class Personne
 {
-    public string Nom { get; set; }
-    public string Prenom { get; set; }
-    public Role? Role { get; set; }
+    public required string Nom { get; set; }
+    public required string Prenom { get; set; }
+    public Role Role { get; set; }
 }
 
 public enum Role
 {
-    Admin,
+    ResponsableMaintenance,
     Manager,
     Technicien,
     Visiteur

@@ -1,26 +1,55 @@
 namespace Projet;
 
-public interface IInterventionProxy
+public class InterventionProxy : IIntervention
 {
-    void Executer();
-}
+    private readonly IIntervention _realIntervention;
+    private readonly Personne _utilisateur;
 
-public class InterventionProxy : IInterventionProxy
-{
-    private readonly IIntervention _intervention;
-    private readonly bool _estAutorise;
-
-    public InterventionProxy(IIntervention intervention, bool estAutorise)
+    public InterventionProxy(IIntervention realIntervention, Personne utilisateur)
     {
-        _intervention = intervention;
-        _estAutorise = estAutorise;
+        _realIntervention = realIntervention;
+        _utilisateur = utilisateur;
     }
 
-    public void Executer()
+    public void InterventionSave()
     {
-        if (_estAutorise)
-            _intervention.Executer();
+        if (EstAutorise())
+        {
+            _realIntervention.InterventionSave();
+        }
         else
-            Console.WriteLine("Accès refusé.");
+        {
+            Console.WriteLine("Accès refusé : utilisateur non autorisé à sauvegarder l'intervention.");
+        }
+    }
+
+    public void InterventionAnnuler()
+    {
+        if (EstAutorise())
+        {
+            _realIntervention.InterventionAnnuler();
+        }
+        else
+        {
+            Console.WriteLine("Accès refusé : utilisateur non autorisé à annuler l'intervention.");
+        }
+    }
+
+    public void InterventionTerminer()
+    {
+        if (EstAutorise())
+        {
+            _realIntervention.InterventionTerminer();
+        }
+        else
+        {
+            Console.WriteLine("Accès refusé : utilisateur non autorisé à terminer l'intervention.");
+        }
+    }
+
+    private bool EstAutorise()
+    {
+        // Exemple simple : vérifier un rôle
+        return _utilisateur.Role == Role.ResponsableMaintenance;
     }
 }

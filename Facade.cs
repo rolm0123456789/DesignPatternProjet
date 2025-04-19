@@ -9,9 +9,9 @@ public class GestionnaireInterventions
         _sujet.Attacher(new ConsoleLogger());
     }
 
-    public IIntervention CreerIntervention(InterventionFactory factory)
+    public IIntervention CreerIntervention(TypeIntervention type)
     {
-        var intervention = factory.CreerIntervention();
+        var intervention = InterventionFactory.CreateIntervention(type);
         _sujet.Notifier("Nouvelle intervention créée.");
         return intervention;
     }
