@@ -2,6 +2,7 @@ namespace Projet;
 
 public abstract class Intervention : IIntervention
 {
+    public string Id { get; set; } = Guid.NewGuid().ToString();
     public string? Nom { get; set; }
     public string? Demande { get; set; }
     public Personne? Demandeur { get; set; }
@@ -9,24 +10,29 @@ public abstract class Intervention : IIntervention
     public DateTime DateDemande { get; set; }
     public DateTime DateRealisation { get; set; }
     public string? Lieu { get; set; }
-    public StatutIntervention Statut { get; protected set; }
+    public StatutIntervention Statut { get; protected set; } = StatutIntervention.Cree;
 
     public virtual void InterventionAnnuler()
     {
-        // Notifier le responsable maintenance si il a pas le droit sinon notifier que c'est annuler le responsable et le demandeur si c'est pas lui qui l'a annuler
-        //changer le statut
+        Statut = StatutIntervention.Annulee;
     }
 
     public virtual void InterventionSave()
     {
-        // Notifier le responsable maintenance si il a pas le droit sinon le responsable qu'il a une nouvelle intervention  
-        //changer le statut
+        Statut = StatutIntervention.Valide;
     }
 
     public virtual void InterventionTerminer()
     {
-        // Notifier le responsable maintenance et le demandeur 
-        //changer le statut
+        Statut = StatutIntervention.Terminee;
+    }
+
+    public override string ToString()
+    {
+        var baseInfo = $"Id: {Id}, Nom: {Nom}, Demandeur: {Demandeur?.Nom}, Responsable: {Responsable?.Nom}, Date Demande: {DateDemande}, Lieu: {Lieu}, Statut: {Statut}";
+        return string.IsNullOrEmpty(this.CheminPieceJointe)
+            ? baseInfo
+            : $"{baseInfo}, Chemin pièce jointe: {this.CheminPieceJointe}";
     }
 }
 public interface IIntervention
@@ -76,6 +82,8 @@ public class UrgenceIntervention : Intervention, IIntervention
 
 public enum StatutIntervention
 {
+    Cree,
+    Valide,
     EnAttente,
     EnCours,
     Annulee,

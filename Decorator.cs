@@ -22,6 +22,11 @@ public class SuiviGPSDecorator : InterventionDecorator
     }
 
     public (decimal, decimal) CoordonneeGps { get; set; } = (0, 0);
+
+    public override string ToString()
+    {
+        return $"{_intervention} - Coordonnée GPS : {CoordonneeGps.Item1}, {CoordonneeGps.Item2}";
+    }
 }
 
 public static class InterventionPiecesJointeExts
