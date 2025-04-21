@@ -2,74 +2,58 @@ namespace Projet;
 
 public interface IObserver
 {
-    void Update(ISubject interventionNotifieurSujet);
+    void Update(IInterventionSubject notifier);
 }
-
-public interface ISubject
-{
-    void Attach(IObserver observer);
-
-    void Detach(IObserver observer);
-
-    void Notify();
-}
-
 
 public class ConsoleLogger : IObserver
 {
-    public void Update(ISubject subject)
+    public void Update(IInterventionSubject notifier)
     {
-        if (subject is InterventionNotifierSujet interventionNotifieurSujet)
-        {
+        Console.WriteLine($"[ConsoleLogger] Changement d'état : {notifier.Intervention?.Nom} - Message : {notifier.Message}");
+    }
+}
 
-            Console.WriteLine("ConsoleLogger: Subject's state has changed to: " + interventionNotifieurSujet.Itervention);
+public class EmailNotificationObserver : IObserver
+{
+    public List<string> Destinataires = new List<string>();
+
+    public void Update(IInterventionSubject notifier)
+    {
+        if (notifier.Intervention is UrgenceIntervention intervention)
+        {
+            Console.WriteLine($"[Email] À : {intervention.Demandeur} | Sujet : {intervention.Nom} | Message : {notifier.Message}");
         }
     }
 }
 
-public class EmailNotifiactionObserver : IObserver
+public class InterventionNotifier : IInterventionSubject
 {
-    public List<string> Personnes = new List<string>();
-    public void Update(ISubject subject)
-    {
-        if (subject is InterventionNotifierSujet interventionNotifieurSujet)
-        {
-            if (interventionNotifieurSujet.Itervention != null && interventionNotifieurSujet.Itervention is UrgenceIntervention intervention)
-            {
-                Console.WriteLine("Envoie d'un email a : " + intervention.Demandeur + "Intervention" + intervention.Nom + " " + interventionNotifieurSujet.Message);
-            }
-        }
-    }
-}
+    public Intervention? Intervention { get; private set; }
+    public string? Message { get; private set; }
 
-public class InterventionNotifierSujet : ISubject
-{
-    public Intervention? Itervention { get; set; }
-    public string? Message { get; set; }
-    private List<IObserver> _observers = new List<IObserver>();
+    private readonly List<IObserver> _observers = new();
 
-    public void Attach(IObserver observer)
-    {
-        _observers.Add(observer);
-    }
+    public void Attach(IObserver observer) => _observers.Add(observer);
+    public void Detach(IObserver observer) => _observers.Remove(observer);
 
-    public void Detach(IObserver observer)
+    public void Notify(Intervention intervention, string message)
     {
-        _observers.Remove(observer);
-    }
+        Intervention = intervention;
+        Message = message;
 
-    public void Notify()
-    {
         foreach (var observer in _observers)
         {
             observer.Update(this);
         }
     }
+}
 
-    public void Notify(Intervention itv, string message)
-    {
-        Itervention = itv;
-        Message = message;
-        Notify();
-    }
+public interface IInterventionSubject
+{
+    void Attach(IObserver observer);
+    void Detach(IObserver observer);
+    void Notify(Intervention intervention, string message);
+
+    Intervention? Intervention { get; }
+    string? Message { get; }
 }

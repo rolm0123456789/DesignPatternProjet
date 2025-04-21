@@ -2,26 +2,32 @@ namespace Projet;
 
 public class GestionnaireInterventions
 {
-    private InterventionSujet _sujet = new InterventionSujet();
-    
-    public GestionnaireInterventions()
+    private readonly IInterventionSubject _sujet;
+    private readonly InterventionFactory _factory;
+
+    public GestionnaireInterventions(IInterventionSubject sujet, InterventionFactory factory)
     {
-        _sujet.Attacher(new ConsoleLogger());
+        _sujet = sujet;
+        _factory = factory;
+
+        // Attache ici si ce n'est pas déjà fait globalement
+        _sujet.Attach(new ConsoleLogger());
     }
 
     public IIntervention CreerIntervention(TypeIntervention type)
     {
-        var intervention = InterventionFactory.CreateIntervention(type);
-        _sujet.Notifier("Nouvelle intervention créée.");
+        var intervention = _factory.CreateIntervention(type);
+        _sujet.Notify((Intervention)intervention, "Nouvelle intervention créée.");
         return intervention;
     }
+
     public void AssignerTechnicien()
     {
-
+        // TODO
     }
 
     public void Sauvegarder()
     {
-
+        // TODO
     }
 }

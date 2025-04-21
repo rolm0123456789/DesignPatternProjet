@@ -2,24 +2,40 @@ namespace Projet;
 
 public abstract class Creator
 {
+    protected readonly IInterventionSubject _subject;
+
+    protected Creator(IInterventionSubject subject)
+    {
+        _subject = subject;
+    }
+
     public abstract Intervention FactoryMethod();
 }
 
 class MaintenanceInterventionCreator : Creator
 {
+    public MaintenanceInterventionCreator(IInterventionSubject subject) : base(subject) { }
+
     public override Intervention FactoryMethod()
     {
-        return new MaintenanceIntervention();
+        var intervention = new MaintenanceIntervention();
+        _subject.Notify(intervention, "Intervention maintenance créée");
+        return intervention;
     }
 }
 
 class UrgenceInterventionCreator : Creator
 {
+    public UrgenceInterventionCreator(IInterventionSubject subject) : base(subject) { }
+
     public override Intervention FactoryMethod()
     {
-        return new UrgenceIntervention();
+        var intervention = new UrgenceIntervention();
+        _subject.Notify(intervention, "Intervention urgence créée");
+        return intervention;
     }
 }
+
 
 public enum TypeIntervention
 {
@@ -31,20 +47,21 @@ public enum TypeIntervention
 
 public class InterventionFactory
 {
-    public static Intervention CreateIntervention(TypeIntervention type)
+    private readonly IInterventionSubject _subject;
+
+    public InterventionFactory(IInterventionSubject subject)
     {
-        Creator creator;
-        switch (type)
+        _subject = subject;
+    }
+
+    public Intervention CreateIntervention(TypeIntervention type)
+    {
+        Creator creator = type switch
         {
-            case TypeIntervention.Urgence:
-                creator = new UrgenceInterventionCreator();
-                break;
-            case TypeIntervention.Maintenance:
-                creator = new MaintenanceInterventionCreator();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(type), type, null);
-        }
+            TypeIntervention.Maintenance => new MaintenanceInterventionCreator(_subject),
+            TypeIntervention.Urgence => new UrgenceInterventionCreator(_subject),
+            _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+        };
 
         return creator.FactoryMethod();
     }

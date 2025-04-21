@@ -2,13 +2,13 @@ namespace Projet;
 
 public abstract class Intervention : IIntervention
 {
-    public string Nom { get; set; }
-    public string Demande { get; set; }
-    public Personne Demandeur { get; set; }
-    public Personne Responsable { get; set; }
+    public string? Nom { get; set; }
+    public string? Demande { get; set; }
+    public Personne? Demandeur { get; set; }
+    public Personne? Responsable { get; set; }
     public DateTime DateDemande { get; set; }
     public DateTime DateRealisation { get; set; }
-    public string Lieu { get; set; }
+    public string? Lieu { get; set; }
     public StatutIntervention Statut { get; protected set; }
 
     public virtual void InterventionAnnuler()
