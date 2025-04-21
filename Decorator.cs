@@ -16,11 +16,7 @@ public abstract class InterventionDecorator : IIntervention
 public class SuiviGPSDecorator : InterventionDecorator
 {
     public SuiviGPSDecorator(IIntervention intervention) : base(intervention) { }
-    public override void InterventionTerminer()
-    {
-        base.InterventionTerminer();
-    }
-
+    
     public (decimal, decimal) CoordonneeGps { get; set; } = (0, 0);
 
     public override string ToString()

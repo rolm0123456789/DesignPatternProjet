@@ -12,11 +12,17 @@ class Program
         services.AddTransient<GestionnaireInterventions>();
 
         var provider = services.BuildServiceProvider();
+        //ajout d'un oberver sur InterventionNotifier
+        var notifier = provider.GetRequiredService<IInterventionSubject>();
+        notifier.Attach(new ConsoleLogger());
+        notifier.Attach(new EmailNotificationObserver());
+
         var gestionnaire = provider.GetRequiredService<GestionnaireInterventions>();
 
         List<Personne> personnes = new List<Personne>();
         List<Intervention> interventions = new List<Intervention>();
         List<SuiviGPSDecorator> interventionsAvecCordonne = new List<SuiviGPSDecorator>();
+
 
         personnes.Add(new Personne
         {
@@ -41,6 +47,31 @@ class Program
 
         interventions.Add((Intervention)gestionnaire.CreerIntervention(TypeIntervention.Urgence, "Intervention 1", personnes[0], personnes[1]));
         interventions.Add((Intervention)gestionnaire.CreerIntervention(TypeIntervention.Maintenance, "Intervention 2", personnes[1], personnes[2]));
+
+        Personne personneConnecter = null;
+        do
+        {
+            Console.WriteLine("Entrez votre nom :");
+            string? nom = Console.ReadLine();
+            if (string.IsNullOrEmpty(nom))
+            {
+                Console.WriteLine("Nom invalide. Veuillez réessayer.");
+            }
+            else
+            {
+                personnes.FirstOrDefault(p => p.Nom == nom);
+                if (personneConnecter != null)
+                {
+                    Console.WriteLine($"Bonjour {personneConnecter.Nom} !");
+                }
+                else
+                {
+                    Console.WriteLine("Personne non trouvée. Veuillez réessayer.");
+                }
+            }
+        } while (personneConnecter != null);
+
+        
         while (true)
         {
             Console.WriteLine("Que voulez-vous faire ?");
