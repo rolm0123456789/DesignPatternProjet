@@ -7,6 +7,8 @@ public abstract class InterventionDecorator : IIntervention
     protected IIntervention _intervention;
     public InterventionDecorator(IIntervention intervention) => _intervention = intervention;
 
+    public void AssignerTechnicien(Personne technicien) => _intervention.AssignerTechnicien(technicien);
+
     public void InterventionAnnuler() => _intervention.InterventionAnnuler();
 
     public void InterventionSave() => _intervention.InterventionSave();
@@ -16,7 +18,7 @@ public abstract class InterventionDecorator : IIntervention
 public class SuiviGPSDecorator : InterventionDecorator
 {
     public SuiviGPSDecorator(IIntervention intervention) : base(intervention) { }
-    
+
     public (decimal, decimal) CoordonneeGps { get; set; } = (0, 0);
 
     public override string ToString()

@@ -5,12 +5,13 @@ public class GestionnaireInterventions
     private readonly IInterventionSubject _sujet;
     private readonly InterventionFactory _factory;
 
+    private InterventionProxy? _interventionProxy;
+
     public GestionnaireInterventions(IInterventionSubject sujet, InterventionFactory factory)
     {
         _sujet = sujet;
         _factory = factory;
 
-        // Attache ici si ce n'est pas déjà fait globalement
         _sujet.Attach(new ConsoleLogger());
     }
 
@@ -51,14 +52,28 @@ public class GestionnaireInterventions
 
     public void AssignerTechnicien(Intervention intervention, Personne technicien)
     {
-        intervention.Responsable = technicien;
-        _sujet.Notify(intervention, "Technicien assigné à l'intervention.");
+        if (_interventionProxy != null)
+        {
+            _interventionProxy.AssignerTechnicien(technicien);
+            _sujet.Notify(intervention, "Technicien assigné à l'intervention.");
+        }
+        else
+        {
+            Console.WriteLine("Aucun proxy d'intervention initialisé. Impossible de sauvegarder.");
+        }
     }
 
     public void Sauvegarder(Intervention intervention)
     {
-        intervention.InterventionSave();
-        _sujet.Notify(intervention, "Intervention sauvegardée.");
+        if (_interventionProxy != null)
+        {
+            _interventionProxy.InterventionSave();
+            _sujet.Notify(intervention, "Intervention sauvegardée.");
+        }
+        else
+        {
+            Console.WriteLine("Aucun proxy d'intervention initialisé. Impossible de sauvegarder.");
+        }
     }
 
     public void AfficherInterventions(IEnumerable<IIntervention> interventions)
@@ -67,5 +82,35 @@ public class GestionnaireInterventions
         {
             Console.WriteLine(intervention);
         }
+    }
+
+    public void AnnulerIntervention(Intervention intervention)
+    {
+        if (_interventionProxy != null)
+        {
+            _interventionProxy.InterventionAnnuler();
+            _sujet.Notify(intervention, "Intervention annulée.");
+        }
+        else
+        {
+            Console.WriteLine("Aucun proxy d'intervention initialisé. Impossible d'annuler.");
+        }
+    }
+
+    public void TerminerIntervention(Intervention intervention)
+    {
+        if (_interventionProxy != null)
+        {
+            _interventionProxy.InterventionTerminer();
+            _sujet.Notify(intervention, "Intervention terminée.");
+        }
+        else
+        {
+            Console.WriteLine("Aucun proxy d'intervention initialisé. Impossible de terminer.");
+        }
+    }
+    public void SetProxy(Personne utilisateur, IIntervention realIntervention)
+    {
+        _interventionProxy = new InterventionProxy(realIntervention, utilisateur);
     }
 }

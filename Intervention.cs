@@ -27,6 +27,11 @@ public abstract class Intervention : IIntervention
         Statut = StatutIntervention.Terminee;
     }
 
+    public void AssignerTechnicien(Personne technicien)
+    {
+        Responsable = technicien;
+    }
+
     public override string ToString()
     {
         var baseInfo = $"Id: {Id}, Nom: {Nom}, Demandeur: {Demandeur?.Nom}, Responsable: {Responsable?.Nom}, Date Demande: {DateDemande}, Lieu: {Lieu}, Statut: {Statut}";
@@ -34,12 +39,14 @@ public abstract class Intervention : IIntervention
             ? baseInfo
             : $"{baseInfo}, Chemin pièce jointe: {this.CheminPieceJointe}";
     }
+
 }
 public interface IIntervention
 {
     public void InterventionTerminer();
     public void InterventionSave();
     public void InterventionAnnuler();
+    public void AssignerTechnicien(Personne technicien);
 }
 
 public class MaintenanceIntervention : Intervention

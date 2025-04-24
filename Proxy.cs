@@ -47,6 +47,19 @@ public class InterventionProxy : IIntervention
         }
     }
 
+    public void AssignerTechnicien(Personne technicien)
+    {
+        if (EstAutorise())
+        {
+            _realIntervention.AssignerTechnicien(technicien);
+        }
+        else
+        {
+            Console.WriteLine("Accès refusé : utilisateur non autorisé à assigner un technicien.");
+        }
+    }
+
+
     private bool EstAutorise()
     {
         // Exemple simple : vérifier un rôle
