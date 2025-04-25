@@ -2,28 +2,39 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
+/// <summary>
+/// Point d'entrée principal de l'application.
+/// Configure les services, initialise les observateurs et gère les interactions utilisateur.
+/// </summary>
 class Program
 {
+    /// <summary>
+    /// Méthode principale de l'application.
+    /// Configure les services, initialise les observateurs et gère les interactions utilisateur via la console.
+    /// </summary>
     static void Main()
     {
+        // Configuration des services
         var services = new ServiceCollection();
         services.AddSingleton<IInterventionSubject, InterventionNotifier>();
         services.AddTransient<InterventionFactory>();
         services.AddTransient<GestionnaireInterventions>();
 
         var provider = services.BuildServiceProvider();
-        //ajout d'un oberver sur InterventionNotifier
+
+        // Ajout d'observateurs sur InterventionNotifier
         var notifier = provider.GetRequiredService<IInterventionSubject>();
         notifier.Attach(new ConsoleLogger());
         notifier.Attach(new EmailNotificationObserver());
 
         var gestionnaire = provider.GetRequiredService<GestionnaireInterventions>();
 
+        // Initialisation des listes de données
         List<Personne> personnes = new List<Personne>();
         List<Intervention> interventions = new List<Intervention>();
         List<SuiviGPSDecorator> interventionsAvecCordonne = new List<SuiviGPSDecorator>();
 
-
+        // Ajout de personnes
         personnes.Add(new Personne
         {
             Nom = "Dupont",
@@ -45,9 +56,11 @@ class Program
             Role = Role.Visiteur
         });
 
+        // Création d'interventions initiales
         interventions.Add((Intervention)gestionnaire.CreerIntervention(TypeIntervention.Urgence, "Intervention 1", personnes[0], personnes[1]));
         interventions.Add((Intervention)gestionnaire.CreerIntervention(TypeIntervention.Maintenance, "Intervention 2", personnes[1], personnes[2]));
 
+        // Gestion de la connexion utilisateur
         Personne personneConnecter = null;
         do
         {
@@ -71,7 +84,7 @@ class Program
             }
         } while (personneConnecter != null);
 
-        
+        // Menu principal
         while (true)
         {
             Console.WriteLine("Que voulez-vous faire ?");
@@ -89,12 +102,14 @@ class Program
             switch (choix)
             {
                 case 1:
+                    // Affiche les interventions en cours
                     Console.WriteLine("Interventions :");
                     gestionnaire.AfficherInterventions(interventions);
                     Console.WriteLine("Interventions avec coordonnées GPS :");
                     gestionnaire.AfficherInterventions(interventionsAvecCordonne);
                     break;
                 case 2:
+                    // Affiche les personnes enregistrées
                     Console.WriteLine("Personnes :");
                     foreach (var personne in personnes)
                     {
@@ -102,10 +117,12 @@ class Program
                     }
                     break;
                 case 3:
+                    // Création d'une nouvelle intervention
                     Console.WriteLine("Création d'une nouvelle intervention...");
                     interventions.Add((Intervention)gestionnaire.CreerIntervention());
                     break;
                 case 4:
+                    // Ajout d'une fonctionnalité à une intervention existante
                     Console.WriteLine("Ajout d'une fonctionnalité à une intervention...");
                     Console.WriteLine("Entrez l'ID de l'intervention :");
                     string idIntervention = Console.ReadLine();
@@ -150,6 +167,7 @@ class Program
                     }
                     break;
                 case 5:
+                    // Assignation d'un technicien à une intervention
                     Console.WriteLine("Assignation d'un technicien à une intervention...");
                     Console.WriteLine("Entrez l'ID de l'intervention :");
                     string idInterventionTechnicien = Console.ReadLine();
@@ -175,6 +193,7 @@ class Program
 
                     break;
                 case 6:
+                    // Sauvegarde d'une intervention
                     Console.WriteLine("Sauvegarde de l'intervention...");
                     Console.WriteLine("Entrez l'ID de l'intervention :");
                     string idInterventionSave = Console.ReadLine();
@@ -189,6 +208,7 @@ class Program
                     }
                     break;
                 case 7:
+                    // Quitte l'application
                     Console.WriteLine("Au revoir !");
                     return;
                 default:
