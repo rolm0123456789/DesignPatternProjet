@@ -1,6 +1,7 @@
 # Diagrammes UML du Projet
 
 ## 1. Pattern Factory Method
+
 ```mermaid
 classDiagram
     class InterventionFactory {
@@ -13,10 +14,21 @@ classDiagram
         +createIntervention() : Intervention
     }
     class Intervention {
-        +date : DateTime
-        +technicien : Technicien
-        +duree : int
-        +lieu : string
+        +Id : string
+        +Nom : string
+        +Demande : string
+        +Demandeur : Personne
+        +Responsable : Personne
+        +Demandeur : Personne
+        +DateDemande : DateTime
+        +DateRealisation : DateTime
+        +Lieu : string
+        +Statut : StatutIntervention
+        +InterventionAnnuler()
+        +InterventionSave()
+        +InterventionTerminer()
+        +AssignerTechnicien()
+        +ToString()
     }
     InterventionFactory <|-- MaintenanceFactory
     InterventionFactory <|-- UrgenceFactory
@@ -25,10 +37,25 @@ classDiagram
 ```
 
 ## 2. Pattern Decorator
+
 ```mermaid
 classDiagram
     class Intervention {
-        +getDescription() : string
+        +Id : string
+        +Nom : string
+        +Demande : string
+        +Demandeur : Personne
+        +Responsable : Personne
+        +Demandeur : Personne
+        +DateDemande : DateTime
+        +DateRealisation : DateTime
+        +Lieu : string
+        +Statut : StatutIntervention
+        +InterventionAnnuler()
+        +InterventionSave()
+        +InterventionTerminer()
+        +AssignerTechnicien()
+        +ToString()
     }
     class InterventionDecorator {
         -intervention : Intervention
@@ -36,11 +63,11 @@ classDiagram
     }
     class SuiviGPSDecorator {
         -coordonnees : string
-        +getDescription() : string
+        +ToString() : string
     }
     class PiecesJointesDecorator {
         -pieceJointe : string
-        +getDescription() : string
+        +ToString() : string
     }
     Intervention <|-- InterventionDecorator
     InterventionDecorator <|-- SuiviGPSDecorator
@@ -48,12 +75,15 @@ classDiagram
 ```
 
 ## 3. Pattern Facade
+
 ```mermaid
 classDiagram
     class GestionnaireInterventions {
         +creerIntervention()
         +assignerTechnicien()
         +sauvegarder()
+        +AfficherInterventions()
+        +AnnulerIntervention()
     }
     class InterventionFactory
     class Technicien
@@ -64,27 +94,57 @@ classDiagram
 ```
 
 ## 4. Pattern Observer
+
 ```mermaid
 classDiagram
-    class IObservateur {
-        +notifier(intervention : Intervention)
+    class IObserver {
+        +Update(notifier : IInterventionSubject)
+    }
+    class IInterventionSubject {
+        +Attach(observer : IObserver)
+        +Detach(observer : IObserver)
+        +Notify(intervention : Intervention, message : string)
+    }
+    class InterventionNotifier {
+        -observers : List~IObserver~
+        +Attach(observer : IObserver)
+        +Detach(observer : IObserver)
+        +Notify(intervention : Intervention, message : string)
+    }
+    class ConsoleLogger {
+        +Update(notifier : IInterventionSubject)
+    }
+    class EmailNotificationObserver {
+        +Destinataires : List~string~
+        +Update(notifier : IInterventionSubject)
     }
     class Intervention {
-        +notifierObservateurs()
-        +ajouterObservateur(obs : IObservateur)
+        +Id : string
+        +Nom : string
+        +Demande : string
+        +Demandeur : Personne
+        +Responsable : Personne
+        +Demandeur : Personne
+        +DateDemande : DateTime
+        +DateRealisation : DateTime
+        +Lieu : string
+        +Statut : StatutIntervention
+        +InterventionAnnuler()
+        +InterventionSave()
+        +InterventionTerminer()
+        +AssignerTechnicien()
+        +ToString()
     }
-    class ConsoleObservateur {
-        +notifier(intervention : Intervention)
-    }
-    class LogObservateur {
-        +notifier(intervention : Intervention)
-    }
-    IObservateur <|.. ConsoleObservateur
-    IObservateur <|.. LogObservateur
-    Intervention --> IObservateur
+
+    IInterventionSubject <|.. InterventionNotifier
+    IObserver <|.. ConsoleLogger
+    IObserver <|.. EmailNotificationObserver
+    InterventionNotifier --> IObserver
+    InterventionNotifier --> Intervention
 ```
 
 ## 5. Pattern Proxy
+
 ```mermaid
 classDiagram
     class IGestionnaireInterventions {
@@ -104,4 +164,4 @@ classDiagram
     IGestionnaireInterventions <|.. GestionnaireInterventions
     IGestionnaireInterventions <|.. ProxyGestionnaire
     ProxyGestionnaire --> GestionnaireInterventions
-``` 
+```

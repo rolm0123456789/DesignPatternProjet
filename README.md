@@ -10,7 +10,7 @@ Application console permettant de gérer la planification d'interventions techni
 - Génération automatique d'interventions types (maintenance, urgence)
 - Sauvegarde dans des fichiers simulés ou logs
 - Envoi de notifications internes (console/log)
-- Gestion d'autorisations et rôles utilisateurs
+- Gestion des autorisations et des rôles utilisateurs
 
 ## 🎨 Design Patterns Utilisés
 
@@ -22,7 +22,7 @@ Application console permettant de gérer la planification d'interventions techni
 
 ### 2. Decorator
 
-- Implémentation de `SuiviGPSDecorator`
+- Implémentation de `SuiviGPSDecorator` et `PiecesJointesDecorator`
 - Implémentation de `InterventionPiecesJointeExts`. Utilisation d'une autre façon de faire, cela permet d'ajouter des propriétés à une classe sans la modifier. Le décorateur et l'extension n'ont pas exactement les mêmes fonctionnalités, il faut adapter selon les cas. (ici le décorateur est préférable pour override le `toString`)
 - Permet d'enrichir les interventions avec des fonctionnalités supplémentaires
 - Maintient la flexibilité du code sans modifier la classe de base
@@ -33,7 +33,7 @@ Application console permettant de gérer la planification d'interventions techni
 - Simplifie l'interface du système
 - Appelle le proxy pour vérifier les droits
 - Méthodes principales :
-  - CréerIntervention()
+  - CreerIntervention()
   - AssignerTechnicien()
   - Sauvegarder()
 
@@ -62,6 +62,7 @@ Application console permettant de gérer la planification d'interventions techni
 2. Cloner le repository
 3. Ouvrir la solution dans Visual Studio Code
 4. `dotnet run` pour lancer
+5. Installer l'extension Mermaid pour l'UML 
 
 ## 🔍 Structure du Projet
 

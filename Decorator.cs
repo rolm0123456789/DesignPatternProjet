@@ -68,6 +68,32 @@ public class SuiviGPSDecorator : InterventionDecorator
 }
 
 /// <summary>
+/// Décorateur ajoutant une pièce jointe à une intervention.
+/// </summary>
+public class PiecesJointesDecorator : InterventionDecorator
+{
+    /// <summary>
+    /// Initialise une nouvelle instance de la classe <see cref="PiecesJointesDecorator"/>.
+    /// </summary>
+    /// <param name="intervention">L'intervention à décorer.</param>
+    public PiecesJointesDecorator(IIntervention intervention) : base(intervention) { }
+
+    /// <summary>
+    /// Chemin de la pièce jointe associée à l'intervention.
+    /// </summary>
+    public string CheminPieceJointe { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Retourne une chaîne de caractères représentant l'intervention avec la pièce jointe.
+    /// </summary>
+    /// <returns>Une chaîne contenant les informations de l'intervention et le chemin de la pièce jointe.</returns>
+    public override string ToString()
+    {
+        return $"{_intervention} - Pièce jointe : {CheminPieceJointe}";
+    }
+}
+
+/// <summary>
 /// Classe d'extension pour ajouter des pièces jointes aux interventions.
 /// </summary>
 public static class InterventionPiecesJointeExts
