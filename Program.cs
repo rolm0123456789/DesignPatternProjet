@@ -174,6 +174,7 @@ class Program
                     Intervention interventionToAssign = interventions.FirstOrDefault(i => i.Id == idInterventionTechnicien);
                     if (interventionToAssign != null)
                     {
+                        gestionnaire.SetProxy(personneConnecter, interventionToAssign);
                         Console.WriteLine("Entrez le nom du technicien :");
                         string? nomTechnicien = Console.ReadLine();
                         Personne technicien = personnes.FirstOrDefault(p => p.Nom == nomTechnicien && p.Role == Role.Technicien);
@@ -200,6 +201,7 @@ class Program
                     Intervention interventionToSave = interventions.FirstOrDefault(i => i.Id == idInterventionSave);
                     if (interventionToSave != null)
                     {
+                        gestionnaire.SetProxy(personneConnecter, interventionToSave);
                         gestionnaire.Sauvegarder(interventionToSave);
                     }
                     else
